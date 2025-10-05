@@ -32,7 +32,11 @@ This prevents us from having to transfer the file to DSMLP individually. Use `la
 
 ## Jupyter Notebooks and DSMLP
 
-If we directly copy the URL, we will get an error because we still haven't got this particular server port running on our local computer. We will need to do the following:
+We will get a jupytar notebook link like the following: `
+http://dsmlp-login:16425/user/kbian/?token=cd03e257e978060cbdca539be321e8e1147a17ac9366bad66a6b5647baa71094
+`, only attempt teh following if the link doesn't work.
+
+If we directly copy the URL and get an error, it's because we still haven't got this particular server port running on our local computer. We will need to do the following:
 
 ### Port Forwarding
 
