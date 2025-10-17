@@ -13,6 +13,11 @@ CPU is good at fetching small amounts of memory quickly (5 * 3 * 7) while the GP
 
     - **Specific GPU**: To see which nodes have which GPUs and the number of unused GPU cores per node, go to the [DSMLP status page](https://datahub.ucsd.edu/hub/status). Use `-n` flag to specify which node we like to use. For instance, if we want to use node n30, which has a GTX A5000, we can use the flag `-n 30` (not `-n n30`). If the node has 6 of its 8 GPU cores being used, then we can’t request any more than 2 GPU cores. To request a specific type of GPU, we can use the `-v flag` (for example, `-v 1080ti`).
 
+        - Example of it would be like:
+            ```bash
+            launch-scipy-ml.sh -W DSC180A_FA25_A00 -g 1 -n 24
+            ```
+
         - If no node request is made, we will be automatically asigned and the assignment will show when launching the container. Something like:
             ```bash
             Wed Oct 11 10:44:35 PDT 2023 INFO pod assigned to node: its-dsmlp-n04.ucsd.edu
@@ -22,6 +27,10 @@ CPU is good at fetching small amounts of memory quickly (5 * 3 * 7) while the GP
         - If we don’t request any GPUs, we will still be in a node that has GPUs, we just won’t have access to any of them. Check the typf of GPU you are getting as the following:
             ```bash
             python -c "import torch; print(torch.cuda.get_device_name(0));"
+            ```
+            and something like the following may show up:
+            ```bash
+            NVIDIA GeForce RTX 2080 Ti
             ```
 
 ## Adapting to Specific Libraries

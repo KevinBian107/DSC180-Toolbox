@@ -33,7 +33,11 @@ launch-scipy-ml.sh -W DSC180A_FA25_A00 -G <team_id>
 
 This prevents us from having to transfer the file to DSMLP individually. Use `launch-scipy-ml.sh -h` to see all of the possible launch options.
 
+Exit the pod by typing `exit` or doing `Ctrl + D` (both on mac and windows).
+
 ## Jupyter Notebooks and DSMLP
+
+***Note: if you have an VPN on and opening the URL works, skip the port forwarding step in the next section.***
 
 We will get a jupytar notebook link like the following: `
 http://dsmlp-login:16425/user/kbian/?token=cd03e257e978060cbdca539be321e8e1147a17ac9366bad66a6b5647baa71094
@@ -79,7 +83,7 @@ If `http://localhost:8889` doesn’t open or you see a connection refused error,
     ```
     Look for an IP address like 128.54.65.160.
 
-3. SSH using the IP address instead of the hostname, this will log into the server under your name:
+3. SSH using the IP address instead of the hostname, this will log into the server under our name:
     ```
     ssh kbian@128.54.65.160
     ```
@@ -88,16 +92,54 @@ If `http://localhost:8889` doesn’t open or you see a connection refused error,
     ```
     ssh -N -L 8889:128.54.65.160:16425 kbian@128.54.65.160
     ```
-    and then open this URL on your local browser:
+    and then open this URL on our local browser:
     ```
     http://localhost:8889/user/kbian/tree/
     ```
 
-The reason of this issue is that the Jupyter server may be running on a compute node or internal network, and forwarding through `dsmlp-login.ucsd.edu`, which is the login node, doesn’t always route traffic correctly. Using the server’s IP address that we get from the login node ensures your connection reaches the right machine and port. When prompted for a “Password or token”, enter the token you just found.
+The reason of this issue is that the Jupyter server may be running on a compute node or internal network, and forwarding through `dsmlp-login.ucsd.edu`, which is the login node, doesn’t always route traffic correctly. Using the server’s IP address that we get from the login node ensures our connection reaches the right machine and port. When prompted for a “Password or token”, enter the token you just found.
 
-## Further Setup
+## Advanced Setup
 Some further setup that will make later development much easier:
 
-- To make later login more simple, we can setup [SSHKeys following this link](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-2).
+### SSH Keys Setup
+To make later login more simple, we can setup [SSHKeys following this link](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-2) and late on we no longer need to enter password for ssh.
 
-- It's also possible to directly connect DSMLP to VsCode directly following the bottom instruction of [this page](https://support.ucsd.edu/services?id=kb_article_view&sysparm_article=kb0032269#Setup-VS-Code).
+Run `ls -al ~/.ssh` to check if keys already exist and look for something with `id_ed25519` or `id_ed25519.pub`. If no key pair exist, generate using the following command:
+
+```bash
+ssh-keygen -t ed25519 -C "kbian@ucsd.edu" 
+```
+
+The system will ask for a saving location and a passphrase, choose empty fo  both of them for default. And we will see messages like the following:
+
+```bash
+Your identification has been saved in /Users/kevinb/.ssh/id_ed25519
+Your public key has been saved in /Users/kevinb/.ssh/id_ed25519.pub
+```
+
+The `id_ed25519.pub` is our public key for uploading to dsmlp and the `id_ed25519` is our private key that we should only keep locally. to upload the public key to dsmlp:
+
+```bash
+ssh-copy-id -i ~/.ssh/id_ed25519.pub kbian@dsmlp-login.ucsd.edu
+```
+
+Now we should be able to log into dsmlp from our local computer with teh following without needing to enter password:
+
+```bash
+ssh 'kbian@dsmlp-login.ucsd.edu'
+```
+
+### VS Code
+It's not permitted to run VS Code directly on dsmlp-login since it consumes significant CPU/RAM resources. However, we can run VS Code inside of a container, and connect to that container from our personal computer. Follow the bottom instruction of [this page](https://support.ucsd.edu/services?id=kb_article_view&sysparm_article=kb0032269#Setup-VS-Code).
+
+After setting the SSH key as default setup above, we can use the `SSHConnect` setup in VS Code and config the following:
+
+```bash
+Host dsc180-dsmlp
+    User kbian
+    IdentityFile ~/.ssh/id_ed25519
+    ProxyCommand ssh -i ~/.ssh/id_ed25519 kbian@dsmlp-login.ucsd.edu /opt/launch-sh/bin/launch-scipy-ml.sh -W DSC180A_FA25_A00 -H -N vscode-dsmlp -g 1 -m 8
+```
+
+Now we should be able to do remote dev on DSMLP with our local VS Code!!!
