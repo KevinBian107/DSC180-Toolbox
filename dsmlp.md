@@ -92,4 +92,9 @@ If `http://localhost:8889` doesn’t open or you see a connection refused error,
 
 The reason of this issue is that the Jupyter server may be running on a compute node or internal network, and forwarding through `dsmlp-login.ucsd.edu`, which is the login node, doesn’t always route traffic correctly. Using the server’s IP address that we get from the login node ensures your connection reaches the right machine and port. When prompted for a “Password or token”, enter the token you just found.
 
-To make later login more simple, we can setup [SSHKeys following this link](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-2).
+## Further Setup
+Some further setup that will make later development much easier:
+
+- To make later login more simple, we can setup [SSHKeys following this link](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-2).
+
+- It's also possible to directly connect DSMLP to VsCode directly following the bottom instruction of [this page](https://support.ucsd.edu/services?id=kb_article_view&sysparm_article=kb0032269#Setup-VS-Code).
