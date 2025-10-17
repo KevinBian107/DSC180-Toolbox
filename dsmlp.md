@@ -99,7 +99,7 @@ If `http://localhost:8889` doesn’t open or you see a connection refused error,
 
 The reason of this issue is that the Jupyter server may be running on a compute node or internal network, and forwarding through `dsmlp-login.ucsd.edu`, which is the login node, doesn’t always route traffic correctly. Using the server’s IP address that we get from the login node ensures our connection reaches the right machine and port. When prompted for a “Password or token”, enter the token you just found.
 
-## Advanced Setup
+## Advance Setup
 Some further setup that will make later development much easier:
 
 ### SSH Keys Setup
