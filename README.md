@@ -3,3 +3,5 @@ Containing handy tool instruction guides for dsc 180a/b, adapted from [teh offic
 
 - [DSMLP Manual](/dsmlp.md)
 - [GPU on DSMLP Manual](/gpu.md)
+- [Data Science Life Cycle](/dslc.md)
+- [Build Script](/build_script.md)

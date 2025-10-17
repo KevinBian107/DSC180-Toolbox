@@ -32,7 +32,10 @@ Different machine learning libraries have different ways of enabling GPU based c
 
 While we can only work for so many hours a day, servers (like DSMLP) can run 24/7. We need to initiate jobs that run for hours, or even days, on DSMLP. We shouldn't be setting in front of our computer and just wait for code to run.
 
-<img src="img/compiling.png" alt="compile" width="20%" height="auto"/>
+<p align="center">
+  <img src="img/compiling.png" alt="compile" width="30%">
+</p>
+
 
 In order to do this, we need:
 

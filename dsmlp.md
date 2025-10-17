@@ -12,7 +12,10 @@ DSMLP is a Kubernetes cluster on which we can run processes in Docker containers
 ssh kbian@dsmlp-login.ucsd.edu
 ```
 
-![connect](img/connect.png)
+<p align="center">
+  <img src="img/connect.png" alt="connect" width="60%">
+</p>
+
 
 Now, we’ve been placed into an initial “jumpbox” server. Think of this initial server as the lobby of a hotel – we could sleep here, but we probably want an actual room, i.e. an actual server. To specify which actual server we want to use, we need to run a launch script. There are several default launch scripts that exist, that initialize pre-configured servers with common tools pre-installed (like pandas and Jupyter Notebooks). When using a default launch script, there will always be some default amount of RAM, CPU, and GPU resources allocated, but we can provide flags when running the launch script to change these. For instance
 
