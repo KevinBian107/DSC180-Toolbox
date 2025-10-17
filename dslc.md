@@ -62,5 +62,41 @@ This [repository](https://github.com/KevinBian107/dsc-project-templates), is ada
 
 More detailed readings are available in the ["Best Practice"](https://dsc-capstone.org/2025-26/lessons/03/#best-practices) section of the DSC capstone reading.
 
+### Modularzied Hierarchical Processing
+One good practice for making reproduciable code is to split work flows to different levels of works. For example, for data preprocessing, we can create **ETL** (Extract, Transform, Load) that calls many lower level functionalities. Then a `run.py` or a `run.sh` may call this ETL processing. An example ETL script would look like the following (copied from [this repository](https://github.com/KevinBian107/dsc-project-templates/blob/nn_regression/src/etl.py)):
+
+```python
+import os
+import pandas as pd
+
+
+def get_data(indir, outdir):
+    '''
+    Reads the data by creating a symlink between the 
+    location of the downloaded data and /data
+    '''
+    # first create the data directory
+    directory = "data"
+    parent_dir = "./"
+    path = os.path.join(parent_dir, directory)
+
+    os.mkdir(path)
+
+    # create a convenient hierarchical structure of folders inside /data
+    directory1 = "raw"
+    directory2 = "temp"
+    directory3 = "out"
+    parent_dir = "./data/"
+    
+    os.mkdir(os.path.join(parent_dir, directory1))
+    os.mkdir(os.path.join(parent_dir, directory2))
+    os.mkdir(os.path.join(parent_dir, directory3))
+    
+    # create the symlink
+    os.symlink(indir, outdir) 
+        
+    return pd.read_csv(outdir)
+```
+
 ### Jupyter Notebook-Specific Guidelines
 Notebooks are meant for **analysis** and **communication** only, not for storing source code. The majority of the notebooks should be made up of Markdown and visualization; there should be very little code, and most of the code there should consist of calls to the functions in your source code. Whenever we have written code that should be included in version control, move it to the source code files.
