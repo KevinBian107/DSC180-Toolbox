@@ -1,6 +1,4 @@
-# DSMLP Access
-
-[Back to home](/README.md)
+# [DSMLP Access](/README.md)
 
 ***Notes copied from dsc [180A capstone website](https://dsc-capstone.org/2025-26/lessons/01/) as well as from [tips here](https://docs.google.com/document/d/1qTMl8xLlX0jkEaGetrwTxa0zqeYSWDSvZ9k17TSNSC0/edit?tab=t.0)***
 

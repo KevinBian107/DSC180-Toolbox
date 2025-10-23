@@ -1,6 +1,4 @@
-# Build Scripts
-
-[Back to home](/README.md)
+# [Build Scripts](/README.md)
 
 ***Notes copied from dsc [180A capstone website](https://dsc-capstone.org/2025-26/lessons/03/#build-scripts)***
 
