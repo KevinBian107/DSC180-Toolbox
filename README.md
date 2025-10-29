@@ -1,4 +1,4 @@
-# UCSD Capstone Tools Manual & Best DSLC Practices
+# Tools Manual & Best Practices
 Containing handy tool instruction guides for dsc 180a/b, adapted from the [official dsc180 website](https://dsc-capstone.org/2025-26/).
 
 ### "Hard"ware
@@ -9,3 +9,6 @@ Containing handy tool instruction guides for dsc 180a/b, adapted from the [offic
 ### "Soft"ware
 - [Data Science Life Cycle](/dslc.md)
 - [Communication in Data Science](/communication.md)
+
+### Agentic Workflow
+- [Claude Code](/claude_code.md)
