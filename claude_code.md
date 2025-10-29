@@ -1,4 +1,4 @@
-# Guide to Using Claude Code
+# [Building Claude Code Agents](/README.md)
 
 Adapted from [this GitHub manual](https://github.com/coleam00/context-engineering-intro/blob/main/claude-code-full-guide/README.md) amd from [this video](https://www.youtube.com/watch?v=amEUIuBKwvg).
 
@@ -16,7 +16,7 @@ claude --version
 
 ---
 
-## TIP 1: CREATE AND OPTIMIZE `CLAUDE.md` FILES
+## SECTION 1: CREATE AND OPTIMIZE `CLAUDE.md` FILES
 
 Set up context files or system prompt that Claude automatically pulls into every conversation for global rules references, which should be containing project-specific information, commands, and guidelines.
 
@@ -46,7 +46,7 @@ Or create your own CLAUDE.md file based on the template in this repository. See 
 - **Proactively**: Encourages Claude to take initiative and suggest improvements
 - **Ultra-think**: Can trigger more thorough analysis (use sparingly)
 
-**Essential Prompt Engineering Tips**:
+**Essential Prompt Engineering SECTIONs**:
 - Avoid prompting for "production-ready" code - this often leads to over-engineering
 - Prompt Claude to write scripts to check its work: "After implementing, create a validation script"
 - Avoid backward compatibility unless specifically needed - Claude tends to preserve old code unnecessarily
@@ -54,7 +54,7 @@ Or create your own CLAUDE.md file based on the template in this repository. See 
 
 ### File Placement Strategies
 
-Claude automatically reads CLAUDE.md files from multiple locations:
+Claude automatically reads CLAUDE.md files from mulSECTIONle locations:
 
 ```bash
 # Root of repository (most common)
@@ -70,7 +70,7 @@ root/backend/CLAUDE.md   # Backend-specific context
 echo "Follow best practices in: ~/company/engineering-standards.md" > CLAUDE.md
 ```
 
-**Pro Tip**: Many teams keep their CLAUDE.md minimal and reference a shared standards document. This makes it easy to:
+**Pro SECTION**: Many teams keep their CLAUDE.md minimal and reference a shared standards document. This makes it easy to:
 - Switch between AI coding assistants
 - Update standards without changing every project
 - Share best practices across teams
@@ -79,14 +79,14 @@ echo "Follow best practices in: ~/company/engineering-standards.md" > CLAUDE.md
 
 ---
 
-## TIP 2: AUTOMATE (PERMISSION MANAGEMENT)
+## SECTION 2: AUTOMATE (PERMISSION MANAGEMENT)
 
 Configure tool allowlists to streamline development while maintaining security for file operations and system commands.
 
-**Method 1: Interactive Allowlist**
+**Method 1: Interactive Allowlist**:
 When Claude asks for permission, select "Always allow" for common operations.
 
-**Method 2: Use /permissions command**
+**Method 2: Use /permissions command**:
 ```
 /permissions
 ```
@@ -97,7 +97,7 @@ Then add:
 - `Read` (for reading files)
 - `Write` (for creating files)
 
-**Method 3: Create project settings file**
+**Method 3: Create project settings file**:
 Create [`.claude/settings.local.json`](/claude_resources/settings.local.json):
 ```json
 {
@@ -122,13 +122,45 @@ Security Best Practices:
 
 *Note: All AI coding assistants have permission management - some built-in, others require manual approval for each action.*
 
+**Method 4: Safe YOLO mode using dev containers**:
+Allow Claude Code to perform any action while maintaining safety through containerization. This enables rapid development without destructive behavior on your host machine.
+
+**Prerequisites:**
+- Install [Docker](https://www.docker.com/) 
+- VS Code (or compatible editors)
+
+**Security Features:**
+- Network isolation with whitelist
+- No access to host filesystem
+- Restricted outbound connections
+- Safe experimentation environment
+
+**Setup Process:**
+
+1. **Open in VS Code** and press `F1`
+2. **Select** "Dev Containers: Reopen in Container"
+3. **Wait** for container build
+4. **Open terminal** (`Ctrl+J`)
+5. **Authenticate** Claude Code in container
+6. **Run in YOLO mode**:
+   ```bash
+   claude --dangerously-skip-permissions
+   ```
+
+**Why Use Dev Containers?**
+- Test dangerous operations safely
+- Experiment with system changes
+- Rapid prototyping
+- Consistent development environment
+- No fear of breaking your system
+
 ---
 
-## TIP 3: AGENTIC WORKFLOWS
+## SECTION 3: "SLASH" AGENTIC WORKFLOWS
 
 Slash commands are the key to adding your own workflows into Claude Code. They live in `.claude/commands/` and enable you to create reusable, parameterized workflows.
 
-- Paricularly, if you have an existing code base, it is really good to use [`.claude/commands/primer.md`](/claude_resources/commands/primer.md) to catch up with teh code base before writing new functions.
+- Paricularly, if you have an existing code base, it is really good to use [`.claude/commands/primer.md`](/claude_resources/commands/primer.md) to catch up with the code base before writing new functions.
 
 ### Built-in Commands
 - `/init` - Generate initial CLAUDE.md
@@ -138,6 +170,7 @@ Slash commands are the key to adding your own workflows into Claude Code. They l
 - `/help` - Get help with Claude Code
 
 ### Custom Command Example
+The coolest thing about this agentic framework is due to the ability to customize **slash commands** so we can have specific functionalities for the specific project we are at:
 
 **Repository Analysis**:
 ```
@@ -165,115 +198,15 @@ Analyze the performance of the file specified in $ARGUMENTS.
 /analyze-performance src/heavy-computation.js
 ```
 
-Commands can use `$ARGUMENTS` to receive parameters and can invoke any of Claude's tools.
+Commands can use `$ARGUMENTS` to receive parameters and can invoke any of Claude's tools for looking at specific files that we want to look at.
 
 *Note: Other AI coding assistants can use these commands as regular prompts - just copy the command content and paste it with your arguments.*
 
 ---
 
-## TIP 4: INTEGRATE MCP
+## SECTION 4: SUBAGENTS
 
-Connect Claude Code to Model Context Protocol (MCP) servers for enhanced functionality. Learn more in the [MCP documentation](https://docs.anthropic.com/en/docs/claude-code/mcp).
-
-**Add Serena MCP Server** - The most powerful coding toolkit:
-
-Make sure you [install uvx](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer) first. Here is how you do that in WSL with Windows:
-```bash
-sudo snap install astral-uv --classic
-```
-
-Then add Serena using the command:
-```bash
-# Install Serena for semantic code analysis and editing
-claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant --project $(pwd)
-```
-
-[Serena](https://github.com/oraios/serena) transforms Claude Code into a fully-featured coding agent with:
-- Semantic code retrieval and analysis
-- Advanced editing capabilities using Language Server Protocol (LSP)
-- Support for Python, TypeScript/JavaScript, PHP, Go, Rust, C/C++, Java
-- Free and open-source alternative to subscription-based coding assistants
-
-**Manage MCP servers:**
-```bash
-# List all configured servers
-claude mcp list
-
-# Get details about a specific server
-claude mcp get serena
-
-# Remove a server
-claude mcp remove serena
-```
-
-**Coming Soon**: Archon V2 (HUGE Overhaul) - A comprehensive knowledge and task management backbone for AI coding assistants - enabling true human-AI collaboration on code for the first time.
-
-*Note: MCP is integrated with every major AI coding assistant and the servers are managed in a very similar way.*
-
----
-
-## TIP 5: CONTEXT ENGINEERING WITH EXAMPLES
-
-Transform your development workflow from simple prompting to comprehensive context engineering - providing AI with all the information needed for end-to-end implementation.
-
-### Quick Start
-
-The PRP (Product Requirements Prompt) framework is a simple 3-step strategy for context engineering:
-
-```bash
-# 1. Define your requirements with examples and context
-# Edit INITIAL.md to include example code and patterns
-
-# 2. Generate a comprehensive PRP
-/generate-prp INITIAL.md
-
-# 3. Execute the PRP to implement your feature
-/execute-prp PRPs/your-feature-name.md
-```
-
-### Defining Your Requirements
-
-Your INITIAL.md should always include:
-
-```markdown
-## FEATURE
-Build a user authentication system
-
-## EXAMPLES
-- Authentication flow: `examples/auth-flow.js`
-- Similar API endpoint: `src/api/users.js` 
-- Database schema pattern: `src/models/base-model.js`
-- Validation approach: `src/validators/user-validator.js`
-
-## DOCUMENTATION
-- JWT library docs: https://github.com/auth0/node-jsonwebtoken
-- Our API standards: `docs/api-guidelines.md`
-
-## OTHER CONSIDERATIONS
-- Use existing error handling patterns
-- Follow our standard response format
-- Include rate limiting
-```
-
-### Critical PRP Strategies
-
-**Examples**: The most powerful tool - provide code snippets, similar features, and patterns to follow
-
-**Validation Gates**: Ensure comprehensive testing and iteration until all tests pass
-
-**No Vibe Coding**: Validate PRPs before executing them and the code after execution!
-
-The more specific examples you provide, the better Claude can match your existing patterns and style.
-
-*Note: Context engineering works with any AI coding assistant - the PRP framework and example-driven approach are universal principles.*
-
----
-
-## TIP 6: LEVERAGE SUBAGENTS FOR SPECIALIZED TASKS
-
-Subagents are specialized AI assistants that operate in separate context windows with focused expertise. They enable Claude to delegate specific tasks to experts, improving quality and efficiency.
-
-### Understanding Subagents
+Subagents are specialized AI assistants that operate in separate context windows with focused expertise. They enable Claude to delegate specific tasks to experts, improving quality and efficiency. The prime agent prompts the subagent, the subagent is very specifalized with limited tools and information given at hand and limited system prompt.
 
 Each subagent:
 - Has its own context window (no pollution from main conversation)
@@ -281,7 +214,7 @@ Each subagent:
 - Can be limited to specific tools
 - Works autonomously on delegated tasks
 
-### Example Subagents in This Repository
+### [Example Subagents in This Repository](/claude_resources/agents/)
 
 **Documentation Manager** (`.claude/agents/documentation-manager.md`):
 - Automatically updates docs when code changes
@@ -340,7 +273,7 @@ Learn more in the [Subagents documentation](https://docs.anthropic.com/en/docs/c
 
 ---
 
-## TIP 7: AUTOMATE WITH HOOKS
+## SECTION 5: DETERNMINESTIC BEHAVIOR
 
 Hooks provide deterministic control over Claude Code's behavior through user-defined shell commands that execute at predefined lifecycle events.
 
@@ -400,7 +333,7 @@ Hooks ensure certain actions always happen, rather than relying on the AI to rem
 
 ---
 
-## TIP 8: GITHUB CLI INTEGRATION
+## SECTION 6: GITHUB CLI INTEGRATION
 
 Set up the GitHub CLI to enable Claude to interact with GitHub for issues, pull requests, and repository management.
 
@@ -417,7 +350,7 @@ gh repo list
 
 ### Custom GitHub Commands
 
-Use the `/fix-github-issue` command for automated fixes:
+Use the custom slash command [`/fix-github-issue`](/claude_resources/commands/fix-github-issue.md) command for automated fixes:
 
 ```
 /fix-github-issue 123
@@ -435,93 +368,97 @@ This will:
 
 ---
 
-## TIP 9: SAFE YOLO MODE WITH DEV CONTAINERS
 
-Allow Claude Code to perform any action while maintaining safety through containerization. This enables rapid development without destructive behavior on your host machine.
+## SECTION 7: INTEGRATE MCP
 
-**Prerequisites:**
-- Install [Docker](https://www.docker.com/) 
-- VS Code (or compatible editors)
+Connect Claude Code to Model Context Protocol (MCP) servers for enhanced functionality. Learn more in the [MCP documentation](https://docs.anthropic.com/en/docs/claude-code/mcp).
 
-**Security Features:**
-- Network isolation with whitelist
-- No access to host filesystem
-- Restricted outbound connections
-- Safe experimentation environment
+**Add Serena MCP Server** - The most powerful coding toolkit:
 
-**Setup Process:**
+Make sure you [install uvx](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer) first. Here is how you do that in WSL with Windows:
+```bash
+sudo snap install astral-uv --classic
+```
 
-1. **Open in VS Code** and press `F1`
-2. **Select** "Dev Containers: Reopen in Container"
-3. **Wait** for container build
-4. **Open terminal** (`Ctrl+J`)
-5. **Authenticate** Claude Code in container
-6. **Run in YOLO mode**:
-   ```bash
-   claude --dangerously-skip-permissions
-   ```
+Then add Serena using the command:
+```bash
+# Install Serena for semantic code analysis and editing
+claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant --project $(pwd)
+```
 
-**Why Use Dev Containers?**
-- Test dangerous operations safely
-- Experiment with system changes
-- Rapid prototyping
-- Consistent development environment
-- No fear of breaking your system
+[Serena](https://github.com/oraios/serena) transforms Claude Code into a fully-featured coding agent with:
+- Semantic code retrieval and analysis
+- Advanced editing capabilities using Language Server Protocol (LSP)
+- Support for Python, TypeScript/JavaScript, PHP, Go, Rust, C/C++, Java
+- Free and open-source alternative to subscription-based coding assistants
+
+**Manage MCP servers:**
+```bash
+# List all configured servers
+claude mcp list
+
+# Get details about a specific server
+claude mcp get serena
+
+# Remove a server
+claude mcp remove serena
+```
+
+**Coming Soon**: Archon V2 (HUGE Overhaul) - A comprehensive knowledge and task management backbone for AI coding assistants - enabling true human-AI collaboration on code for the first time.
+
+*Note: MCP is integrated with every major AI coding assistant and the servers are managed in a very similar way.*
 
 ---
 
-## TIP 10: PARALLEL DEVELOPMENT WITH GIT WORKTREES
+## SECTION 8: CONTEXT ENGINEERING
 
-Use Git worktrees to enable multiple Claude instances working on independent tasks simultaneously, or automate parallel implementations of the same feature.
-
-### Manual Worktree Setup
+Three step process that transform your development workflow from simple prompting to comprehensive context engineering, providing AI with all the information needed for end-to-end implementation. The **PRP (Product Requirements Prompt)** framework is a simple 3-step strategy for context engineering:
 
 ```bash
-# Create worktrees for different features
-git worktree add ../project-auth feature/auth
-git worktree add ../project-api feature/api
+# 1. Define your requirements with examples and context
+# Edit INITIAL.md to include example code and patterns
 
-# Launch Claude in each worktree
-cd ../project-auth && claude  # Terminal 1
-cd ../project-api && claude   # Terminal 2
+# 2. Generate a comprehensive PRP
+/generate-prp INITIAL.md
+
+# 3. Execute the PRP to implement your feature
+/execute-prp PRPs/your-feature-name.md
 ```
 
-### Automated Parallel Agents
+### Defining Your Requirements
 
-AI coding assistants are non-deterministic. Running multiple attempts increases success probability and provides implementation options.
+Your `INITIAL.md` should always include:
 
-**Setup parallel worktrees:**
-```bash
-/prep-parallel user-system 3
+```markdown
+## FEATURE
+Build a user authentication system
+
+## EXAMPLES
+- Authentication flow: `examples/auth-flow.js`
+- Similar API endpoint: `src/api/users.js` 
+- Database schema pattern: `src/models/base-model.js`
+- Validation approach: `src/validators/user-validator.js`
+
+## DOCUMENTATION
+- JWT library docs: https://github.com/auth0/node-jsonwebtoken
+- Our API standards: `docs/api-guidelines.md`
+
+## OTHER CONSIDERATIONS
+- Use existing error handling patterns
+- Follow our standard response format
+- Include rate limiting
 ```
 
-**Execute parallel implementations:**
-1. Create a plan file (`plan.md`)
-2. Run parallel execution:
+The more specific examples you provide, the better Claude can match your existing patterns and style.
 
-```bash
-/execute-parallel user-system plan.md 3
-```
 
-**Select the best implementation:**
-```bash
-# Review results
-cat trees/user-system-*/RESULTS.md
+- **Examples**: The most powerful tool - provide code snippets, similar features, and patterns to follow
 
-# Test each implementation
-cd trees/user-system-1 && npm test
+- **Validation Gates**: Ensure comprehensive testing and iteration until all tests pass
 
-# Merge the best
-git checkout main
-git merge user-system-2
-```
+- **No Vibe Coding**: Validate PRPs before executing them and the code after execution!
 
-### Benefits
-
-- **No Conflicts**: Each instance works in isolation
-- **Multiple Approaches**: Compare different implementations
-- **Quality Gates**: Only consider implementations where tests pass
-- **Easy Integration**: Merge the best solution
+*Note: Context engineering works with any AI coding assistant - the PRP framework and example-driven approach are universal principles.*
 
 ---
 ---
@@ -547,9 +484,8 @@ Remember: Claude Code is most powerful when you provide clear context, specific 
 | `/prep-parallel [feature] [count]` | Setup parallel worktrees |
 | `/execute-parallel [feature] [plan] [count]` | Run parallel implementations |
 
----
 
-## Additional Resources
+### Additional Resources
 
 - [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
 - [Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices)
