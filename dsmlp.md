@@ -141,3 +141,6 @@ Host dsc180-dsmlp
 ```
 
 Now we should be able to do remote dev on DSMLP with our local VS Code!!!
+
+### Quota Limit Upgrade
+To ask for more memory quota, desk quota, or more compute, visit [this link](https://support.ucsd.edu/its?id=sc_home) to submit an ITS ticket, which will request UCSD account login.
