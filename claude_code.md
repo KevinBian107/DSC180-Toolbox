@@ -9,6 +9,13 @@ Adapted from [this GitHub manual](https://github.com/coleam00/context-engineerin
 npm install -g @anthropic-ai/claude-code
 ```
 
+or install localy
+
+```bash
+npm install @anthropic-ai/claude-code
+npx @anthropic-ai/claude-code
+```
+
 **Verify installation:**
 ```bash
 claude --version
