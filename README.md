@@ -5,6 +5,7 @@ Containing handy tool instruction guides for dsc 180a/b, adapted from the [offic
 - [DSMLP Manual](/dsmlp.md)
 - [GPU on DSMLP Manual](/gpu.md)
 - [Build Script](/build_script.md)
+- [Git & Version Control](/git.md)
 
 ### "Soft"ware
 - [Data Science Life Cycle](/dslc.md)
