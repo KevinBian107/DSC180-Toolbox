@@ -143,4 +143,8 @@ Host dsc180-dsmlp
 Now we should be able to do remote dev on DSMLP with our local VS Code!!!
 
 ### Quota Limit Upgrade
-To ask for more memory quota, desk quota, or more compute, visit [this link](https://support.ucsd.edu/its?id=sc_home) to submit an ITS ticket, which will request UCSD account login.
+To ask for more disk quota, visit [datahub.ucsd.edu/services](https://datahub.ucsd.edu/services/disk-quota-service/) first to see the assigned quota first, which shoud look at something like this, then visit [this link](https://support.ucsd.edu/its?id=sc_home) to submit an ITS ticket, which will request UCSD account login.
+
+<p align="center">
+  <img src="img/quota.png" alt="quota limits" width="80%">
+</p>
