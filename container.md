@@ -2,6 +2,8 @@
 
 ***Notes copied from dsc [180A capstone website](https://dsc-capstone.org/2025-26/assignments/methodology/06/)***
 
+For more resources, refer to [this link from the DSC 180A capstone website](https://dsc-capstone.org/2025-26/assignments/methodology/06/#additional-docker-resources).
+
 ## Docker
 
 In the event that your project involves more than just Python packages, conda environments might not suffice. That’s where Docker comes in. Docker provides you with a sandbox, in which you can run applications and install packages without impacting other parts of your computer. Specifically:
@@ -16,7 +18,7 @@ Each time when we use DataHub or run a launch script on DSMLP, we are indirectly
 
 ## Container Registry and DSMLP
 
-Docker can be accessed remotely, either from GitHub or DockerHub: one place to store Docker images is [GitHub Container Registry (GHCR)](https://github.com/features/actions), which is what we’ll use here, another place is [Docker Hub](http://hub.docker.com/). For their Docker images, DSMLP used to use Docker Hub, but they switched over to GHCR recently. For instance, ghcr.io/ucsd-ets/[datascience-notebook:2023.4-notebook7](datascience-notebook:2023.4-notebook7) is the base image that all other DataHub and DSMLP images are based off of.
+Docker can be accessed remotely, either from GitHub or DockerHub: one place to store Docker images is [GitHub Container Registry (GHCR)](https://github.com/features/actions), which is what we’ll use here, another place is [Docker Hub](http://hub.docker.com/). For their Docker images, DSMLP used to use Docker Hub, but they switched over to GHCR recently. For instance, [ghcr.io/ucsd-ets/datascience-notebook:2023.4-notebook7](https://ghcr.io/ucsd-ets/datascience-notebook) is the base image that all other DataHub and DSMLP images are based off of.
 
 When launching a container on DSMLP, we can specify an image from online that we’d like to launch our container in. For instance, suppose we want to launch a container using the [base data science image linked above](https://github.com/ucsd-ets/datahub-docker-stack/pkgs/container/datascience-notebook). To do so, we need to find the path for the image. Images on GHCR have paths of the form `ghcr.io/<user>/<image>:<tag>`. For this image, the user is `ucsdets`, the image is `datascience-notebook`, and the most recent tag is `2023.4-notebook7`, so we’ll use that. (Other tags are listed below; [read more about tags here](https://www.freecodecamp.org/news/an-introduction-to-docker-tags-9b5395636c2a/).)
 
@@ -93,24 +95,24 @@ There is nothing special about these packages; just need to install something fo
 
 ### Creating an Image
 
-To create an image using thhis Dockerfile, use the following command in our Terminal/command-prompt:
+To create an image using this Dockerfile, use the following command in our Terminal/command-prompt:
 
 ```
 docker build -t dsc-example-docker-image .
 ```
 
-Replace `dsc-example-docker-image` with an image name we choose; our image can be named anything, but it should be something informative to our project.
+Replace `dsc-example-docker-image` with an image name we choose; our image can be named anything, but it should be something informative to our project. **If the access is denied, add the GitHub token first**.
 
 **Make sure Docker Desktop is running on the computer at the same time, otherwise this won’t work!** It may take >10 minutes to create the image for the first time. This is to be expected, because it’s pulling ~5GB of files. Subsequent pulls will be much faster.
 
 ### Testing the Image
-Once the image is built, run the following command in Terminal:
+Once the image is built, run the following command in Terminal (we can now directly run a virtual Linux system within our MacOS system directly):
 
 ```bash
 docker run --rm -it dsc-example-docker-image
 ```
 
-To verify that packages we installed via `apt-get` are installed, run `which <package-name>`, e.g. `which nmap` (for aria2, use which aria2c). To verify that packages we installed via `conda` or `pip` are installed, open a Python interpreter and try to import them, or use `pip show <package name>`.
+To verify that packages we installed via `apt-get` are installed, run `which <package-name>`, e.g. `which nmap` (for `aria2`, use `which aria2c`). To verify that packages we installed via `conda` or `pip` are installed, open a Python interpreter and try to import them, or use `pip show <package name>`.
 
 
 ### Push the Image to GHCR
@@ -118,25 +120,19 @@ To verify that packages we installed via `apt-get` are installed, run `which <pa
 Before pushing to GHCR, we’re going to need to tell the Docker client what the GitHub credentials are. Start by creating a [new (classic) personal access token that has permission to read, write, and delete packages](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). Then, in Terminal run
 
 ```bash
-export CR_PAT=9q30thpalagekaef
+echo 9q30thpalagekaef | docker login ghcr.io -u KevinBian107 --password-stdin
 ```
 
-with `9q30thpalagekaef` replaced with our token (the above token is fake). Then, run
+with `9q30thpalagekaef` replaced with our token (the above token is fake). Now, we’re ready to push our image to GHCR. Start by using docker tag to specify a path for our image on GHCR:
 
 ```bash
-echo $CR_PAT | docker login ghcr.io -u KevinBian107 --password-stdin
-```
-
-Now, we’re ready to push our image to GHCR. Start by using docker tag to specify a path for our image on GHCR:
-
-```bash
-docker tag dsc-example-docker-image ghcr.io/KevinBian107/dsc-example-docker-image
+docker tag dsc-example-docker-image ghcr.io/kevinbian107/dsc-example-docker-image
 ```
 
 Finally, execute:
 
 ```bash
-docker push ghcr.io/ubellur/dsc-example-docker-image
+docker push ghcr.io/kevinbian107/dsc-example-docker-image
 ```
 
 This should take a few minutes, but after, we should be able to navigate to the GitHub profile, click “Packages” at the top, and see `dsc-example-docker-image` as a private package there. Click the package, click “Package Settings” on the right, and at the bottom, turn it into a public package. This will allow us to access it from DSMLP.
@@ -145,5 +141,5 @@ This should take a few minutes, but after, we should be able to navigate to the 
 Log onto the DSMLP jumpbox server. From there, run:
 
 ```bash
-launch.sh -i ghcr.io/KevinBian107/dsc-example-docker-image -W DSC180A_FA25_A00
+launch.sh -i ghcr.io/kevinbian107/dsc-example-docker-image -W DSC180A_FA25_A00
 ```
