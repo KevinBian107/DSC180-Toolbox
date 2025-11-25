@@ -14,3 +14,5 @@ Containing handy tool instruction guides for dsc 180a/b, adapted from the [offic
 ### Soft Tools
 - [Data Science Life Cycle](/dslc.md)
 - [Communication in Data Science](/communication.md)
+
+*Recommend to read this [ethics reading on data science in practice](https://dsc-capstone.org/2025-26/lessons/05/)
